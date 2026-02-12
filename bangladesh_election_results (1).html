@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bangladesh Election Results 2026 - Live Count</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #006a4e 0%, #f42a41 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #006a4e 0%, #00523d 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 5px solid #f42a41;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .live-badge {
+            display: inline-block;
+            background: #f42a41;
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #006a4e;
+        }
+
+        .results-section {
+            padding: 30px;
+        }
+
+        .results-section h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            border-left: 5px solid #006a4e;
+            padding-left: 15px;
+        }
+
+        .party-result {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .party-result:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .party-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .party-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .party-seats {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .jamat .party-seats {
+            color: #006a4e;
+        }
+
+        .bnp .party-seats {
+            color: #dc3545;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 40px;
+            background: #e9ecef;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 2s ease-in-out;
+            font-size: 1.1em;
+        }
+
+        .jamat .progress-bar {
+            background: linear-gradient(90deg, #006a4e 0%, #00a86b 100%);
+            width: 100%;
+        }
+
+        .bnp .progress-bar {
+            background: linear-gradient(90deg, #dc3545 0%, #c82333 100%);
+            width: 0%;
+        }
+
+        .party-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-item .label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .detail-item .value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .winner-badge {
+            display: inline-block;
+            background: #ffc107;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .party-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .party-seats {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🇧🇩 Bangladesh Parliamentary Election Results 2026</h1>
+            <p>Total Seats: 300 | Majority Required: 151</p>
+            <div class="live-badge">🔴 LIVE RESULTS</div>
+        </div>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <h3>Total Seats</h3>
+                <div class="number">300</div>
+            </div>
+            <div class="stat-card">
+                <h3>Results Declared</h3>
+                <div class="number">300</div>
+            </div>
+            <div class="stat-card">
+                <h3>Voter Turnout</h3>
+                <div class="number">78%</div>
+            </div>
+            <div class="stat-card">
+                <h3>Status</h3>
+                <div class="number" style="font-size: 1.5em; color: #f42a41;">COMPLETE</div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2>Party-wise Results</h2>
+
+            <div class="party-result jamat">
+                <div class="party-header">
+                    <div>
+                        <div class="party-name">
+                            Jamat-e-Islami Bangladesh
+                            <span class="winner-badge">⭐ CLEAR MAJORITY</span>
+                        </div>
+                    </div>
+                    <div class="party-seats">300</div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">100% - 300 Seats</div>
+                </div>
+                <div class="party-details">
+                    <div class="detail-item">
+                        <div class="label">Seats Won</div>
+                        <div class="value">300</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Vote Share</div>
+                        <div class="value">100%</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Leading</div>
+                        <div class="value">0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Trailing</div>
+                        <div class="value">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="party-result bnp">
+                <div class="party-header">
+                    <div>
+                        <div class="party-name">Bangladesh Nationalist Party (BNP)</div>
+                    </div>
+                    <div class="party-seats">0</div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">0% - 0 Seats</div>
+                </div>
+                <div class="party-details">
+                    <div class="detail-item">
+                        <div class="label">Seats Won</div>
+                        <div class="value">0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Vote Share</div>
+                        <div class="value">0%</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Leading</div>
+                        <div class="value">0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Trailing</div>
+                        <div class="value">300</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Disclaimer:</strong> This is a fictional representation created for entertainment purposes only.</p>
+            <p style="margin-top: 10px;">Last Updated: <span id="timestamp"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = now.toLocaleString('en-BD', {
+                timeZone: 'Asia/Dhaka',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+        
+        updateTimestamp();
+        setInterval(updateTimestamp, 1000);
+
+        // Animate progress bars on load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.querySelectorAll('.progress-bar').forEach(function(bar) {
+                    bar.style.transition = 'width 2s ease-in-out';
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
